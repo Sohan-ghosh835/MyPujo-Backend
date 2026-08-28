@@ -1,0 +1,1 @@
+ALTER TABLE `coordinateCandidates` MODIFY COLUMN `status` enum('candidate','resolved','approved','rejected','unresolved','review_required') NOT NULL DEFAULT 'candidate';

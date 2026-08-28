@@ -1,0 +1,2 @@
+ALTER TABLE `coordinateCandidates` MODIFY COLUMN `confidence` enum('high','medium','low','unverified') NOT NULL DEFAULT 'unverified';--> statement-breakpoint
+ALTER TABLE `coordinateCandidates` MODIFY COLUMN `status` enum('candidate','resolved','approved','rejected','unresolved') NOT NULL DEFAULT 'candidate';

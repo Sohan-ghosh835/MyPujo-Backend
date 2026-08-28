@@ -1,0 +1,1 @@
+ALTER TABLE `pandalImageCandidates` MODIFY COLUMN `status` enum('discovered','candidate','matched','needs_review','license_unknown','approved','published','rejected','broken','removed','unmatched','review_required','unreachable','duplicate','no_match') NOT NULL DEFAULT 'review_required';
