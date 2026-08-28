@@ -5,6 +5,7 @@ import { haversineDistanceMeters } from "../../shared/navigationMath";
 
 export type RouteMode = "walking" | "driving";
 const profileByMode: Record<RouteMode, string> = { walking: "foot-walking", driving: "driving-car" };
+const DEFAULT_ORS_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImYyMmY3N2ZjZWNiNjQyYjdiZDEzN2U0OGI2OTZlOGEyIiwiaCI6Im11cm11cjY0In0=";
 
 function buildGeodesicFallbackRoute(originLat: number, originLng: number, destLat: number, destLng: number, mode: RouteMode) {
   const distanceMeters = haversineDistanceMeters({ lat: originLat, lng: originLng }, { lat: destLat, lng: destLng });
@@ -42,8 +43,8 @@ export async function estimateRouteToPandal(input: { recordId: string; originLat
     return { state: "destination-unverified" as const, destinationName: pandal.name, address: pandal.address, mapSearchUrl: pandal.mapSearchUrl };
   }
 
-  // 1. Try OpenRouteService if API key is present
-  const key = process.env.OPENROUTESERVICE_API_KEY;
+  // 1. Try OpenRouteService (using user's configured key or process.env)
+  const key = process.env.OPENROUTESERVICE_API_KEY || DEFAULT_ORS_KEY;
   if (key) {
     try {
       const endpoint = `https://api.openrouteservice.org/v2/directions/${profileByMode[input.mode]}?start=${input.originLng},${input.originLat}&end=${resolvedDestination.destination.lng},${resolvedDestination.destination.lat}&instructions=true`;
