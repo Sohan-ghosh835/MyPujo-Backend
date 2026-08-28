@@ -1,14 +1,14 @@
 import { findPandal } from "./pandalCatalog";
 import { getNavigationDestination } from "./coordinateResolution";
 import type { RouteInstruction } from "../../shared/navigationPresentation";
-import { haversineDistanceMeters } from "../../shared/navigationMath";
+import { haversineMeters } from "../../shared/navigationMath";
 
 export type RouteMode = "walking" | "driving";
 const profileByMode: Record<RouteMode, string> = { walking: "foot-walking", driving: "driving-car" };
 const DEFAULT_ORS_KEY = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImYyMmY3N2ZjZWNiNjQyYjdiZDEzN2U0OGI2OTZlOGEyIiwiaCI6Im11cm11cjY0In0=";
 
 function buildGeodesicFallbackRoute(originLat: number, originLng: number, destLat: number, destLng: number, mode: RouteMode) {
-  const distanceMeters = haversineDistanceMeters({ lat: originLat, lng: originLng }, { lat: destLat, lng: destLng });
+  const distanceMeters = haversineMeters({ lat: originLat, lng: originLng }, { lat: destLat, lng: destLng });
   const distanceKm = Number((distanceMeters / 1000).toFixed(1));
   const speedKmh = mode === "driving" ? 25 : 5;
   const durationMinutes = Math.max(1, Math.round((distanceKm / speedKmh) * 60));
