@@ -2,25 +2,37 @@ import express, { type Express } from "express";
 import fs from "fs";
 import { type Server } from "http";
 import path from "path";
+import { createServer as createViteServer } from "vite";
 
 export async function setupVite(app: Express, server: Server) {
   if (process.env.NODE_ENV === "production") return;
   try {
-    const viteModule = await import("vite");
-    const createViteServer = viteModule.createServer;
+    console.log("[Vite] Creating vite server...");
     const serverOptions = {
       middlewareMode: true,
       hmr: { server },
       allowedHosts: true as const,
     };
     const vite = await createViteServer({
-      configFile: false,
+      configFile: path.resolve(process.cwd(), "vite.config.ts"),
       server: serverOptions,
       appType: "custom",
     });
     app.use(vite.middlewares);
-  } catch {
-    console.log("Vite dev server skipped.");
+    app.use("*", async (req, res, next) => {
+      const url = req.originalUrl;
+      try {
+        const clientTemplate = path.resolve(process.cwd(), "client/index.html");
+        let template = fs.readFileSync(clientTemplate, "utf-8");
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ "Content-Type": "text/html" }).end(template);
+      } catch (e) {
+        vite.ssrFixStacktrace(e as Error);
+        next(e);
+      }
+    });
+  } catch (e) {
+    console.log("Vite dev server skipped.", e);
   }
 }
 

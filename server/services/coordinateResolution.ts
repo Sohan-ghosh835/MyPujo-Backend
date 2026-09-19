@@ -22,6 +22,11 @@ type NavigableCoordinate = {
   evidenceScore: number | null;
 };
 type CoordinateCandidateRows = NavigableCoordinate[];
+function coordinateIsNavigationEligible(item: { latitudeE6?: number; longitudeE6?: number; confidence?: string } | null | undefined): boolean {
+  if (!item || !item.latitudeE6 || !item.longitudeE6) return false;
+  return item.confidence === "high" || item.confidence === "medium";
+}
+
 let approvedCoordinateCache: CoordinateCandidateRows = [];
 let approvedCoordinateCacheAt = 0;
 let approvedCoordinateRefresh: Promise<CoordinateCandidateRows> | null = null;

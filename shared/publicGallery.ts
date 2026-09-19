@@ -7,6 +7,7 @@ export type PublicGalleryAsset = { pandal: PandalListItem; image: PandalImage; i
 
 export const isPublicGalleryImage = (image: PandalImage) =>
   Boolean(image.url && image.sourceUrl && image.author && image.license) &&
+  !image.url.startsWith("/manus-storage/pandal_") &&
   DISPLAYABLE_RIGHTS.has(image.rightsStatus ?? "") &&
   image.verificationStatus === "verified";
 

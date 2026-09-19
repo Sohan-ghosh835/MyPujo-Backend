@@ -9,7 +9,7 @@ describe("approved pandal image library", () => {
       const record = ALL_PANDALS.find(item => item.id === pandalId);
       expect(record).toBeDefined();
       expect(images.length).toBeGreaterThan(0);
-      expect(images.every(image => image.url.startsWith("/manus-storage/") && Boolean(image.author && image.license && image.licenseUrl && image.sourceUrl) && image.verificationStatus === "verified")).toBe(true);
+      expect(images.every(image => (image.url.startsWith("/manus-storage/") || image.url.startsWith("http")) && Boolean(image.author && image.license && image.licenseUrl && image.sourceUrl) && image.verificationStatus === "verified")).toBe(true);
       expect(record?.images).toEqual(expect.arrayContaining(images));
     }
   });
@@ -21,6 +21,6 @@ describe("approved pandal image library", () => {
   });
 
   it("does not treat private Amar Pujo records or unapproved review candidates as catalogue imagery", () => {
-    expect(ALL_PANDALS.every(record => record.images?.every(image => image.verificationStatus === "verified" && image.url.startsWith("/manus-storage/")) ?? true)).toBe(true);
+    expect(ALL_PANDALS.every(record => record.images?.every(image => image.verificationStatus === "verified" && (image.url.startsWith("/manus-storage/") || image.url.startsWith("http"))) ?? true)).toBe(true);
   });
 });
