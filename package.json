@@ -24,6 +24,7 @@
     "superjson": "^1.13.3",
     "tsx": "^4.19.1",
     "typescript": "5.9.3",
+    "vite": "^7.1.7",
     "zod": "^4.1.12"
   },
   "devDependencies": {

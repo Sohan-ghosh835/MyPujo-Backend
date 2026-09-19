@@ -2,12 +2,12 @@ import express, { type Express } from "express";
 import fs from "fs";
 import { type Server } from "http";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 
 export async function setupVite(app: Express, server: Server) {
   if (process.env.NODE_ENV === "production") return;
   try {
     console.log("[Vite] Creating vite server...");
+    const { createServer: createViteServer } = await import("vite");
     const serverOptions = {
       middlewareMode: true,
       hmr: { server },
